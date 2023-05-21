@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "672860158503",
+    "project_id": "tan-phuong-milktea",
+    "storage_bucket": "tan-phuong-milktea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672860158503:android:2420989a211e0ee209ec02",
+        "android_client_info": {
+          "package_name": "com.tanphuong.milktea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672860158503-ebo53hb1gjif72aq9drm67odijvl9qk2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tanphuong.milktea",
+            "certificate_hash": "e8ec55ee49ad6f0a2ce8159fc3c3dd4197b31324"
+          }
+        },
+        {
+          "client_id": "672860158503-798kkjcheu79n60ibpgkv5u03voafiji.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkhEtgGkJsaJj-DGDZCHPjsphXg9yUwN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672860158503-798kkjcheu79n60ibpgkv5u03voafiji.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
