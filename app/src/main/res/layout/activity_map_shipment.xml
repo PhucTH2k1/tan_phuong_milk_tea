@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".shipment.ui.MapShipmentActivity">
+
+    <TextView
+        android:id="@+id/tv_title_choose_product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Sản phẩm đã chọn:"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_choose_product">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ctl_milktea_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_name_milk_tea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="3 X trà sữa trân châu đường đen:"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_price_milktea"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_price_milktea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120.000đ"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ctl_price_milktea_choose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ctl_milktea_price">
+
+            <TextView
+                android:id="@+id/tv_price_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Thành tiền:"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_price_milktea_choose"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_price_milktea_choose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="120.0O0đ"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ctl_shipper_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ctl_price_milktea_choose">
+
+            <TextView
+                android:id="@+id/tv_price_shipper_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Phí giao hàng:"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_price_shipper"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_price_shipper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="18.000d"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ctl_shipper_price">
+
+            <TextView
+                android:id="@+id/tv_total_bill_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Số tiền thanh toán:"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_total_bill"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_total_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="138.000đ"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
