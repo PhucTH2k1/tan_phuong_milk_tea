@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.tanphuong.milktea.R;
 import com.tanphuong.milktea.bill.data.MilkTeaOrderFactory;
 import com.tanphuong.milktea.databinding.ActivityOrderMilkTeaBinding;
 import com.tanphuong.milktea.drink.data.IngredientFetcher;
@@ -25,6 +27,9 @@ import java.util.List;
 public class OrderMilkTeaActivity extends AppCompatActivity {
     public static final String MILK_TEA_DATA = "MILK_TEA_DATA";
     private ActivityOrderMilkTeaBinding binding;
+    private Size size = Size.MEDIUM;
+    private IceGauge iceGauge = IceGauge.NORMAL;
+    private SugarGauge sugarGauge = SugarGauge.NORMAL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,8 @@ public class OrderMilkTeaActivity extends AppCompatActivity {
         binding = ActivityOrderMilkTeaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
+
+        references();
 
         // Đầu tiên, lấy dữ liệu nguyên liệu
         binding.imgBack.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +103,73 @@ public class OrderMilkTeaActivity extends AppCompatActivity {
                 MilkTeaOrder order = new MilkTeaOrder();
                 order.setMilkTea(finalMilkTea);
                 order.setQuantity(1);
-                order.setSize(Size.MEDIUM);
-                order.setIceGauge(IceGauge.LESS);
-                order.setSugarGauge(SugarGauge.LESS);
+                order.setSize(size);
+                order.setIceGauge(iceGauge);
+                order.setSugarGauge(sugarGauge);
                 order.setToppings(adapter.getPickedToppings());
                 MilkTeaOrderFactory.addOrder(order);
                 finish();
             }
         });
+    }
+
+    private void references() {
+        binding.rlSmall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchSize(Size.SMALL);
+            }
+        });
+        binding.rlMedium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchSize(Size.MEDIUM);
+            }
+        });
+        binding.rlLarge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchSize(Size.LARGE);
+            }
+        });
+        binding.tvSugarGauge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sugarGauge = sugarGauge.nextGauge();
+                binding.tvSugarGauge.setText(sugarGauge.title());
+            }
+        });
+        binding.tvIceGauge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iceGauge = iceGauge.nextGauge();
+                binding.tvIceGauge.setText(iceGauge.title());
+            }
+        });
+    }
+
+    private void switchSize(Size newSize) {
+        size = newSize;
+        binding.rlSmall.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_stroke));
+        binding.tvSizeSmall.setTextColor(getColor(R.color.DarkSlateGray));
+        binding.rlMedium.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_stroke));
+        binding.tvSizeMedium.setTextColor(getColor(R.color.DarkSlateGray));
+        binding.rlLarge.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_stroke));
+        binding.tvSizeLarge.setTextColor(getColor(R.color.DarkSlateGray));
+
+        switch (size) {
+            case SMALL:
+                binding.rlSmall.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_fill));
+                binding.tvSizeSmall.setTextColor(getColor(R.color.White));
+                break;
+            case MEDIUM:
+                binding.rlMedium.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_fill));
+                binding.tvSizeMedium.setTextColor(getColor(R.color.White));
+                break;
+            case LARGE:
+                binding.rlLarge.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_fill));
+                binding.tvSizeLarge.setTextColor(getColor(R.color.White));
+                break;
+        }
     }
 }

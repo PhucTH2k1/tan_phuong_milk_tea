@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="64dp"
+            android:backgroundTint="@color/OrangeRed"
             android:drawableLeft="@drawable/outline_shopping_cart_24"
             android:paddingVertical="12dp"
             android:text="Thanh toán 0 VND"

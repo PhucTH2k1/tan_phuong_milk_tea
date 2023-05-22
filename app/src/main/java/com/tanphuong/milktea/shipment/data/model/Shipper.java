@@ -11,8 +11,8 @@ public class Shipper extends Person {
     public Shipper() {
     }
 
-    public Shipper(String id, String phoneNumber, String avatar, List<LatLng> coordinates) {
-        super(id, phoneNumber, avatar);
+    public Shipper(String id, String phoneNumber, String email, String avatar, List<LatLng> coordinates) {
+        super(id, phoneNumber, email, avatar);
         this.coordinates = coordinates;
     }
 

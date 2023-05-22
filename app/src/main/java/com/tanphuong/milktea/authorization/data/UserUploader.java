@@ -1,4 +1,4 @@
-package com.tanphuong.milktea.authorization.data.model;
+package com.tanphuong.milktea.authorization.data;
 
 import android.util.Log;
 
@@ -8,9 +8,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.tanphuong.milktea.authorization.data.model.User;
 
-public final class UserInfoService {
-    private static final String TAG = "UserInfoService";
+public final class UserUploader {
+    private static final String TAG = "UserUploader";
 
     public static void upload(FirebaseUser userInfo, OnUploadUserCallback callback) {
         String userId = userInfo.getUid();
@@ -24,6 +25,9 @@ public final class UserInfoService {
         user.setId(userId);
         if (userInfo.getPhoneNumber() != null) {
             user.setPhoneNumber(userInfo.getPhoneNumber());
+        }
+        if (userInfo.getEmail() != null) {
+            user.setEmail(userInfo.getEmail());
         }
         if (userInfo.getDisplayName() != null) {
             user.setUserName(userInfo.getDisplayName());

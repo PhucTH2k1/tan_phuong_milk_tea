@@ -9,8 +9,8 @@ public class User extends Person {
     public User() {
     }
 
-    public User(String id, String phoneNumber, String avatar, String userName, String address) {
-        super(id, phoneNumber, avatar);
+    public User(String id, String phoneNumber, String email, String avatar, String userName, String address) {
+        super(id, phoneNumber, email, avatar);
         this.userName = userName;
         this.address = address;
     }

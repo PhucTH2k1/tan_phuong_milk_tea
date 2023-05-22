@@ -101,6 +101,6 @@ public class MilkTeaOrder {
         for (RealIngredient topping : toppings) {
             cost += topping.calculateCost();
         }
-        totalCost = cost + milkTea.getTotalCost();
+        totalCost = (cost + milkTea.getTotalCost()) * quantity;
     }
 }

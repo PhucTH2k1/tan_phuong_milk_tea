@@ -28,8 +28,17 @@ public class CartFragment extends Fragment {
         List<MilkTeaOrder> orders = MilkTeaOrderFactory.showCart();
         adapter = new MilkTeaOrderAdapter(orders, new MilkTeaOrderAdapter.Callback() {
             @Override
-            public void onDelete(MilkTeaOrder order) {
-                boolean isSuccess = MilkTeaOrderFactory.removeOrder(order);
+            public void onIncreaseQuantity(MilkTeaOrder order) {
+                boolean isSuccess = MilkTeaOrderFactory.addOneMoreOrder(order);
+                if (isSuccess) {
+                    adapter.notifyDataSetChanged();
+                    calculateTotalPrice();
+                }
+            }
+
+            @Override
+            public void onDecreaseQuantity(MilkTeaOrder order) {
+                boolean isSuccess = MilkTeaOrderFactory.subtractOneOrder(order);
                 if (isSuccess) {
                     adapter.notifyDataSetChanged();
                     calculateTotalPrice();

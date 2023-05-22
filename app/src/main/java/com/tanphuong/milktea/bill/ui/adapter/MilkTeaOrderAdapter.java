@@ -37,6 +37,7 @@ public class MilkTeaOrderAdapter extends RecyclerView.Adapter<MilkTeaOrderAdapte
                 .load(order.getMilkTea().getCoverImage())
                 .centerCrop()
                 .into(holder.binding.imgMilkTeaCover);
+        holder.binding.tvQuantity.setText(order.getQuantity() + "");
         holder.binding.tvMilkTeaName.setText(order.getMilkTea().getName());
         holder.binding.tvMilkTeaPrice.setText(order.getMilkTea().getTotalCost() + " VND");
         holder.binding.tvTotalPrice.setText(order.getTotalCost() + " VND");
@@ -45,11 +46,22 @@ public class MilkTeaOrderAdapter extends RecyclerView.Adapter<MilkTeaOrderAdapte
             sb.append(topping.getName()).append(": ").append(topping.calculateCost()).append(" VND").append("\n");
         }
         holder.binding.tvTopping.setText(sb.toString());
-        holder.binding.rlDelete.setOnClickListener(new View.OnClickListener() {
+        holder.binding.tvSize.setText(order.getSize().title());
+        holder.binding.tvSugarGauge.setText(order.getSugarGauge().title());
+        holder.binding.tvIceGauge.setText(order.getIceGauge().title());
+        holder.binding.rlIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (callback != null) {
-                    callback.onDelete(order);
+                    callback.onIncreaseQuantity(order);
+                }
+            }
+        });
+        holder.binding.rlDecrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callback != null) {
+                    callback.onDecreaseQuantity(order);
                 }
             }
         });
@@ -74,6 +86,8 @@ public class MilkTeaOrderAdapter extends RecyclerView.Adapter<MilkTeaOrderAdapte
     }
 
     public interface Callback {
-        void onDelete(MilkTeaOrder order);
+        void onIncreaseQuantity(MilkTeaOrder order);
+
+        void onDecreaseQuantity(MilkTeaOrder order);
     }
 }

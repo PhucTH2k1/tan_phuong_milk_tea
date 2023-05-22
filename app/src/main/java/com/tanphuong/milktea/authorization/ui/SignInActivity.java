@@ -31,7 +31,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.tanphuong.milktea.authorization.data.AuthorizationValidator;
 import com.tanphuong.milktea.authorization.data.PhoneSignIn;
 import com.tanphuong.milktea.authorization.data.SocialSignIn;
-import com.tanphuong.milktea.authorization.data.model.UserInfoService;
+import com.tanphuong.milktea.authorization.data.UserUploader;
 import com.tanphuong.milktea.databinding.ActivitySignInBinding;
 import com.tanphuong.milktea.home.ui.HomeActivity;
 
@@ -107,7 +107,7 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signInSuccess(FirebaseUser userInfo) {
-        UserInfoService.upload(userInfo, new UserInfoService.OnUploadUserCallback() {
+        UserUploader.upload(userInfo, new UserUploader.OnUploadUserCallback() {
             @Override
             public void onSuccess() {
                 Intent intent = new Intent(SignInActivity.this, HomeActivity.class);

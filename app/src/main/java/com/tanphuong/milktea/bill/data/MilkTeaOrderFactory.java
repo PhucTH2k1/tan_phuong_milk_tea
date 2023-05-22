@@ -14,11 +14,30 @@ public final class MilkTeaOrderFactory {
         orders.add(order);
     }
 
+    public static boolean addOneMoreOrder(MilkTeaOrder order) {
+        return adjustQuantityToOrder(order, 1);
+    }
+
+    public static boolean subtractOneOrder(MilkTeaOrder order) {
+        return adjustQuantityToOrder(order, -1);
+    }
+
     public static boolean removeOrder(MilkTeaOrder order) {
         return orders.remove(order);
     }
 
     public static List<MilkTeaOrder> showCart() {
         return orders;
+    }
+
+    private static boolean adjustQuantityToOrder(MilkTeaOrder order, int biasQuantity) {
+        int newQuantity = order.getQuantity() + biasQuantity;
+        if (newQuantity <= 0) {
+            // Xoá order, vì số lượng đã về 0
+            return orders.remove(order);
+        }
+        order.setQuantity(newQuantity);
+        order.calculateCost();
+        return orders.contains(order);
     }
 }
