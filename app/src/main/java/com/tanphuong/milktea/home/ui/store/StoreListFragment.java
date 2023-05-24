@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tanphuong.milktea.R;
@@ -55,6 +57,7 @@ public class StoreListFragment extends Fragment implements OnMapReadyCallback,
                 loadedStores.clear();
                 loadedStores.addAll(stores);
                 if (map != null) {
+                    List<LatLng> coordinates = new ArrayList<>();
                     for (int i = 0; i < stores.size(); i++) {
                         Store store = stores.get(i);
                         LatLng position = new LatLng(store.getLatitude(), store.getLongitude());
@@ -66,10 +69,19 @@ public class StoreListFragment extends Fragment implements OnMapReadyCallback,
                                         BitmapUtils.createMaker(getContext(),
                                                 R.drawable.img_default_store_cover,
                                                 store.getName()))));
-                        if (i == stores.size() - 1) {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15.0f));
-                        }
+                        coordinates.add(position);
                     }
+
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    for (LatLng latLng : coordinates) {
+                        builder.include(latLng);
+                    }
+                    LatLngBounds bounds = builder.build();
+                    int width = getResources().getDisplayMetrics().widthPixels;
+                    int height = getResources().getDisplayMetrics().heightPixels;
+                    int padding = (int) (width * 0.1);
+                    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, height, width, padding);
+                    map.animateCamera(cu);
                 }
             }
 

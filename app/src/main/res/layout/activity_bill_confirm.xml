@@ -138,9 +138,10 @@
         app:layout_constraintTop_toBottomOf="@id/ctl_choose_product">
 
         <TextView
-            android:id="@+id/selected_quantity"
+            android:id="@+id/tv_selected_quantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:maxLines="3"
             android:text="3X trà sữa trân châu đường đen"
             android:textSize="18dp"
             app:layout_constraintEnd_toStartOf="@id/tv_price_select_product"
@@ -279,6 +280,15 @@
         android:text="Chọn phương thức thanh toán"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_pay_title" />
+
+    <Button
+        android:id="@+id/btn_gpay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Google Pay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_pay" />
 
     <Button
         android:id="@+id/btn_pay"

@@ -1,5 +1,6 @@
 package com.tanphuong.milktea.home.ui.cart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.tanphuong.milktea.bill.data.MilkTeaOrderFactory;
+import com.tanphuong.milktea.bill.ui.BillConfirmActivity;
 import com.tanphuong.milktea.bill.ui.adapter.MilkTeaOrderAdapter;
 import com.tanphuong.milktea.databinding.FragmentCartBinding;
 import com.tanphuong.milktea.drink.data.model.MilkTeaOrder;
+import com.tanphuong.milktea.shipment.ui.ShipmentMapsActivity;
 
 import java.util.List;
 
@@ -43,6 +46,13 @@ public class CartFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     calculateTotalPrice();
                 }
+            }
+        });
+        binding.btnPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), BillConfirmActivity.class);
+                startActivity(intent);
             }
         });
         return root;

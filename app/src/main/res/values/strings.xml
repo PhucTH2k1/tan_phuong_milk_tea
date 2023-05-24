@@ -11,4 +11,6 @@
     <string name="prompt_password"></string>
     <string name="action_sign_in_short"></string>
     <string name="action_sign_in"></string>
+    <string name="googlepay_status_unavailable">Unfortunately, Google Pay is not available on this device.</string>
+    <string name="payments_show_name">Successfully received payment data for %s!</string>
 </resources>

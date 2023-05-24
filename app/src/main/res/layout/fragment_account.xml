@@ -31,7 +31,7 @@
                 android:background="@drawable/circle"
                 android:padding="3dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/user_avatar" />
+                android:src="@drawable/ic_user_avatar" />
 
         </RelativeLayout>
 
