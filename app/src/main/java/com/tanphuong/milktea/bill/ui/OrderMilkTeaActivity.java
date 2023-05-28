@@ -90,7 +90,7 @@ public class OrderMilkTeaActivity extends AppCompatActivity {
         binding.tvMilkTeaName.setText(milkTea.getName());
         binding.tvMilkTeaName2.setText(milkTea.getName());
         binding.tvMilkTeaDes.setText(milkTea.getDescribe());
-        binding.tvMilkTeaPrice.setText(milkTea.getTotalCost() + " VND");
+        binding.tvMilkTeaPrice.setText(milkTea.getTotalCost() + "đ");
 
         ToppingAdapter adapter = new ToppingAdapter(toppings);
         binding.rvTopping.setLayoutManager(new LinearLayoutManager(this));

@@ -24,4 +24,13 @@ public enum IceGauge {
                 return "Nhiều";
         }
     }
+
+    public static IceGauge fromString(String text) {
+        for (IceGauge gauge : IceGauge.values()) {
+            if (gauge.name().equalsIgnoreCase(text)) {
+                return gauge;
+            }
+        }
+        return NORMAL;
+    }
 }

@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.tanphuong.milktea.authorization.data.AuthorizationValidator;
 import com.tanphuong.milktea.authorization.data.PhoneSignIn;
-import com.tanphuong.milktea.authorization.data.SocialSignIn;
 import com.tanphuong.milktea.authorization.data.UserUploader;
 import com.tanphuong.milktea.databinding.ActivitySignInBinding;
 import com.tanphuong.milktea.home.ui.HomeActivity;
@@ -42,7 +41,6 @@ public class SignInActivity extends AppCompatActivity {
     private ActivitySignInBinding binding;
     private BottomSheetBehavior sheetBehavior;
     private PhoneSignIn phoneSignIn;
-    private SocialSignIn socialSignIn;
     private String currentVerificationId;
 
     @Override
@@ -107,10 +105,11 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void signInSuccess(FirebaseUser userInfo) {
-        UserUploader.upload(userInfo, new UserUploader.OnUploadUserCallback() {
+        UserUploader.upload(userInfo, new UserUploader.Callback() {
             @Override
             public void onSuccess() {
                 Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
 
@@ -157,7 +156,6 @@ public class SignInActivity extends AppCompatActivity {
                 showBottomSheetOtp();
             }
         });
-        socialSignIn = new SocialSignIn();
     }
 
     private void references() {
@@ -239,6 +237,7 @@ public class SignInActivity extends AppCompatActivity {
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
     }
+
     private void hideBottomSheetOtp() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);

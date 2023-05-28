@@ -2,6 +2,7 @@ package com.tanphuong.milktea.core.data.model;
 
 public class Person {
     private String id;
+    private String name;
     private String phoneNumber;
     private String email;
     private String avatar;
@@ -9,8 +10,9 @@ public class Person {
     public Person() {
     }
 
-    public Person(String id, String phoneNumber, String email, String avatar) {
+    public Person(String id, String name, String phoneNumber, String email, String avatar) {
         this.id = id;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.avatar = avatar;
@@ -22,6 +24,14 @@ public class Person {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {

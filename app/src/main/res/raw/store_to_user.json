@@ -1,0 +1,204 @@
+{
+  "geocoded_waypoints" : [
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJ05db5jlTNDERq6D5ncFX9XY",
+      "types" : [ "bank", "establishment", "finance", "point_of_interest" ]
+    },
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJ64PORBhTNDERit73PwsE3HA",
+      "types" : [ "route" ]
+    }
+  ],
+  "routes" : [
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 20.9794376,
+          "lng" : 105.7672563
+        },
+        "southwest" : {
+          "lat" : 20.9598172,
+          "lng" : 105.7541406
+        }
+      },
+      "copyrights" : "Map data \u00a92023",
+      "legs" : [
+        {
+          "distance" : {
+            "text" : "3.3 km",
+            "value" : 3275
+          },
+          "duration" : {
+            "text" : "8 mins",
+            "value" : 509
+          },
+          "end_address" : "\u0110\u01b0\u1eddng ch\u01b0a \u0111\u1eb7t t\u00ean, D\u01b0\u01a1ng Kinh, H\u00e0 \u0110\u00f4ng, H\u00e0 N\u1ed9i, Vietnam",
+          "end_location" : {
+            "lat" : 20.9794376,
+            "lng" : 105.7566488
+          },
+          "start_address" : "XQ58+WXF, P. V\u0103n Kh\u00ea, Khu \u0111\u00f4 th\u1ecb V\u0103n Ph\u00fa, H\u00e0 \u0110\u00f4ng, H\u00e0 N\u1ed9i, Vietnam",
+          "start_location" : {
+            "lat" : 20.9598172,
+            "lng" : 105.7672563
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0.4 km",
+                "value" : 361
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 79
+              },
+              "end_location" : {
+                "lat" : 20.9622917,
+                "lng" : 105.765008
+              },
+              "html_instructions" : "Head \u003cb\u003enorthwest\u003c/b\u003e on \u003cb\u003eP. V\u0103n Kh\u00ea\u003c/b\u003e toward \u003cb\u003eNg. 24 P. V\u0103n Ph\u00fa\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by C\u00f4ng Ty TNHH D\u1ecbch V\u1ee5 T\u01b0 V\u1ea5n Ch\u00ednh S\u00e1ch V\u00e0 Ph\u00e1t Tri\u1ec3n M\u00f4i Tr\u01b0\u1eddng LT (on the right)\u003c/div\u003e",
+              "polyline" : {
+                "points" : "{u|~BktpdSg@b@_FhEcCzBe@^{@v@"
+              },
+              "start_location" : {
+                "lat" : 20.9598172,
+                "lng" : 105.7672563
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "1.2 km",
+                "value" : 1208
+              },
+              "duration" : {
+                "text" : "3 mins",
+                "value" : 196
+              },
+              "end_location" : {
+                "lat" : 20.9679421,
+                "lng" : 105.7550877
+              },
+              "html_instructions" : "At C\u00f4ng Ty Cp Xd Nh\u1eadt Nam, continue onto \u003cb\u003e\u0110. L\u00ea Tr\u1ecdng T\u1ea5n\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by T\u00f2a Nh\u00e0 Th\u1ee7y L\u1ee3i Tower - 128 L\u00ea Tr\u1ecdng T\u1ea5n (H\u00e0 \u0110\u00f4ng) (on the right)\u003c/div\u003e",
+              "polyline" : {
+                "points" : "ie}~BifpdS[Z_AfBQ^eArB[n@i@lAOZADOZIRc@`A_@r@CB]t@]v@[p@e@`AIPIRy@~AABq@zAMXi@jAm@rAEFELoBjEO\\iB`Eu@`BQ`@]p@y@bB"
+              },
+              "start_location" : {
+                "lat" : 20.9622917,
+                "lng" : 105.765008
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.3 km",
+                "value" : 278
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 34
+              },
+              "end_location" : {
+                "lat" : 20.9699275,
+                "lng" : 105.7545847
+              },
+              "html_instructions" : "Slight \u003cb\u003eright\u003c/b\u003e at C\u00f4ng Ty Tnhh Xu\u1ea5t Nh\u1eadp Kh\u1ea9u Nguy\u00ean Li\u1ec7u Mi\u1ec1n B\u1eafc\u003cdiv style=\"font-size:0.9em\"\u003ePass by Ti\u1ec7m C\u01a1 Kh\u00ed \u0110\u1ee9c Trung (on the right)\u003c/div\u003e",
+              "maneuver" : "turn-slight-right",
+              "polyline" : {
+                "points" : "sh~~BihndSIDC@ABC@CF?@CD[p@GNINGHKNQRMHKDIDKBMBO@M?MAOAIAOEMEWMa@Ua@WECECCAAAA?AAA?A@E@"
+              },
+              "start_location" : {
+                "lat" : 20.9679421,
+                "lng" : 105.7550877
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.6 km",
+                "value" : 564
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 71
+              },
+              "end_location" : {
+                "lat" : 20.9734872,
+                "lng" : 105.7584089
+              },
+              "html_instructions" : "Slight \u003cb\u003eright\u003c/b\u003e at T\u00e0i x\u1ec9u md5 onto \u003cb\u003eP. Nguy\u1ec5n Thanh B\u00ecnh\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by C\u1eeda H\u00e0ng C\u01b0\u1eddng \u0110\u1ed3ng H\u1ed3 C\u1ed5 (on the right)\u003c/div\u003e",
+              "maneuver" : "turn-slight-right",
+              "polyline" : {
+                "points" : "au~~BcendSKK{@e@UOSOIESOQMo@k@OOCC[_@YWoAsAwDiFeA{Ae@o@w@eA"
+              },
+              "start_location" : {
+                "lat" : 20.9699275,
+                "lng" : 105.7545847
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.6 km",
+                "value" : 578
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 87
+              },
+              "end_location" : {
+                "lat" : 20.9774906,
+                "lng" : 105.7548681
+              },
+              "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e at Anh V\u0103n H\u1ed9i Vi\u1ec7t M\u1ef9 - VUS An H\u01b0ng\u003cdiv style=\"font-size:0.9em\"\u003ePass by K\u00ednh m\u1eaft OONG - C\u00f4ng ty CP OONG (on the left)\u003c/div\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "ik__Ca}ndSUTA?}@n@sApA_@TSL_@d@e@b@e@\\q@n@mA`AUR}ArAi@b@a@\\kA`AiA`A"
+              },
+              "start_location" : {
+                "lat" : 20.9734872,
+                "lng" : 105.7584089
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.3 km",
+                "value" : 286
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 42
+              },
+              "end_location" : {
+                "lat" : 20.9794376,
+                "lng" : 105.7566488
+              },
+              "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e at Xe \u0110i\u1ebfu Qu\u00e1n\u003cdiv style=\"font-size:0.9em\"\u003eDestination will be on the right\u003c/div\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "id`_C}fndSkBgCiBqAwB{Aw@m@"
+              },
+              "start_location" : {
+                "lat" : 20.9774906,
+                "lng" : 105.7548681
+              },
+              "travel_mode" : "DRIVING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "{u|~BktpdSqLhKwArAqAfC{ClG_AvB_BdDuAxC_FnK_HlOo@rAy@bBIDEDGHg@hAo@|@YNUH]D[AYC]KaB_AMGE?E@KKqAu@cAs@_A{@_@c@iBkB}FeI}AuBWT}@n@sApAs@b@_@d@e@b@wAlAkFlEmB~AiA`AkBgCaFmDw@m@"
+      },
+      "summary" : "\u0110. L\u00ea Tr\u1ecdng T\u1ea5n",
+      "warnings" : [],
+      "waypoint_order" : []
+    }
+  ],
+  "status" : "OK"
+}

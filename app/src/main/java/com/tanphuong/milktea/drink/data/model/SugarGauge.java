@@ -24,4 +24,13 @@ public enum SugarGauge {
                 return "Nhiều";
         }
     }
+
+    public static SugarGauge fromString(String text) {
+        for (SugarGauge gauge : SugarGauge.values()) {
+            if (gauge.name().equalsIgnoreCase(text)) {
+                return gauge;
+            }
+        }
+        return NORMAL;
+    }
 }

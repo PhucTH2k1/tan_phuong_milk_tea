@@ -1,0 +1,205 @@
+{
+  "geocoded_waypoints" : [
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJNe1H2itTNDERYts2Wg-wesU",
+      "types" : [ "street_address" ]
+    },
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJ05db5jlTNDERq6D5ncFX9XY",
+      "types" : [ "bank", "establishment", "finance", "point_of_interest" ]
+    }
+  ],
+  "routes" : [
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 20.9716506,
+          "lng" : 105.7764958
+        },
+        "southwest" : {
+          "lat" : 20.9575523,
+          "lng" : 105.7672563
+        }
+      },
+      "copyrights" : "Map data \u00a92023",
+      "legs" : [
+        {
+          "distance" : {
+            "text" : "2.5 km",
+            "value" : 2502
+          },
+          "duration" : {
+            "text" : "6 mins",
+            "value" : 386
+          },
+          "end_address" : "XQ58+WXF, P. V\u0103n Kh\u00ea, Khu \u0111\u00f4 th\u1ecb V\u0103n Ph\u00fa, H\u00e0 \u0110\u00f4ng, H\u00e0 N\u1ed9i, Vietnam",
+          "end_location" : {
+            "lat" : 20.9598172,
+            "lng" : 105.7672563
+          },
+          "start_address" : "42a P. Tr\u1ea7n Nh\u1eadt Du\u1eadt, T\u1ed5 d\u00e2n ph\u1ed1 2, H\u00e0 \u0110\u00f4ng, H\u00e0 N\u1ed9i, Vietnam",
+          "start_location" : {
+            "lat" : 20.9716506,
+            "lng" : 105.7764958
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0.8 km",
+                "value" : 771
+              },
+              "duration" : {
+                "text" : "2 mins",
+                "value" : 105
+              },
+              "end_location" : {
+                "lat" : 20.9671273,
+                "lng" : 105.7708777
+              },
+              "html_instructions" : "Head \u003cb\u003esouthwest\u003c/b\u003e on \u003cb\u003e\u0110. Quang Trung\u003c/b\u003e/\u003cwbr/\u003e\u003cb\u003eQL6\u003c/b\u003e toward \u003cb\u003eP. Nguy\u1ec5n Th\u00e1i H\u1ecdc\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by ACB - PGD H\u00e0 \u0110\u00f4ng (on the right)\u003c/div\u003e",
+              "polyline" : {
+                "points" : "y___CcnrdSX\\bBvBHH`CxCFJ`@d@V\\VZTVZd@fB|Bj@x@`@f@LRtAtBj@x@hA|AlAbBJNFH"
+              },
+              "start_location" : {
+                "lat" : 20.9716506,
+                "lng" : 105.7764958
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.5 km",
+                "value" : 495
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 86
+              },
+              "end_location" : {
+                "lat" : 20.9637724,
+                "lng" : 105.773622
+              },
+              "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e at S\u00e2n tennis nh\u00e0 thi \u0111\u1ea5u h\u00e0 \u0111\u00f4ng onto \u003cb\u003eKhu H\u00e0 Tr\u00ec\u003c/b\u003e/\u003cwbr/\u003e\u003cb\u003eP. C\u1ea7u \u0110\u01a1\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eGo through 1 roundabout\u003c/div\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by Ph\u00f2ng Kh\u00e1m S\u1ea3n Ph\u1ee5 Khoa Ch\u00fac An (on the right)\u003c/div\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "qc~~B_kqdSX^`@a@r@k@h@c@j@c@RSfBwARWT_@@?@?@?@A@??A@??A@??A?A@A?AXGTMtBsB|BqB"
+              },
+              "start_location" : {
+                "lat" : 20.9671273,
+                "lng" : 105.7708777
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.2 km",
+                "value" : 232
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 33
+              },
+              "end_location" : {
+                "lat" : 20.9624062,
+                "lng" : 105.7720943
+              },
+              "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e at Ngh\u0129a trang Nh\u00e2n d\u00e2n th\u00f4n C\u1ea7u \u0110\u01a1",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "qn}~Bc|qdSPO`@h@bArAj@v@\\d@NRX^V^?@JN"
+              },
+              "start_location" : {
+                "lat" : 20.9637724,
+                "lng" : 105.773622
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.3 km",
+                "value" : 281
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 41
+              },
+              "end_location" : {
+                "lat" : 20.9598786,
+                "lng" : 105.7721567
+              },
+              "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e at Ph\u1edf G\u00e1nh Plus onto \u003cb\u003eP. Ho\u00e0ng \u0110\u00f4n H\u00f2a\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003ePass by CTY C\u1ed4 PH\u1ea6N TRUY\u1ec0N TH\u00d4NG V\u00c0 C\u00d4NG NGH\u1ec6 NEW WORLD (on the right)\u003c/div\u003e",
+              "maneuver" : "turn-left",
+              "polyline" : {
+                "points" : "af}~BqrqdSrHEdEG"
+              },
+              "start_location" : {
+                "lat" : 20.9624062,
+                "lng" : 105.7720943
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.4 km",
+                "value" : 394
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 75
+              },
+              "end_location" : {
+                "lat" : 20.9575523,
+                "lng" : 105.7692996
+              },
+              "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e at C\u01a1 S\u1edf C\u01a1 Kh\u00ed Vinh H\u00e0o\u003cdiv style=\"font-size:0.9em\"\u003ePass by Ban mai coffee (on the right)\u003c/div\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "gv|~B_sqdS@@tAbBz@jABBn@|@vC`E`BpBNR"
+              },
+              "start_location" : {
+                "lat" : 20.9598786,
+                "lng" : 105.7721567
+              },
+              "travel_mode" : "DRIVING"
+            },
+            {
+              "distance" : {
+                "text" : "0.3 km",
+                "value" : 329
+              },
+              "duration" : {
+                "text" : "1 min",
+                "value" : 46
+              },
+              "end_location" : {
+                "lat" : 20.9598172,
+                "lng" : 105.7672563
+              },
+              "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eP. V\u0103n Kh\u00ea\u003c/b\u003e\u003cdiv style=\"font-size:0.9em\"\u003eDestination will be on the right\u003c/div\u003e",
+              "maneuver" : "turn-right",
+              "polyline" : {
+                "points" : "ug|~BcaqdSaEjDcGjF"
+              },
+              "start_location" : {
+                "lat" : 20.9575523,
+                "lng" : 105.7692996
+              },
+              "travel_mode" : "DRIVING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "y___CcnrdSbJdLdEtFpDjFjDzEX^`@a@|AoA~@w@fBwARWT_@@?@?BABCBEXITMtBsBnCaCnDzE`AtAJNrHEfEEpCnDr@`AvC`E`BpBNRaEjDcGjF"
+      },
+      "summary" : "\u0110. Quang Trung/QL6",
+      "warnings" : [],
+      "waypoint_order" : []
+    }
+  ],
+  "status" : "OK"
+}

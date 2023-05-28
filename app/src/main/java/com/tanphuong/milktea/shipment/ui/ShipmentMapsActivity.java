@@ -1,14 +1,20 @@
 package com.tanphuong.milktea.shipment.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.FragmentActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,15 +22,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tanphuong.milktea.R;
+import com.tanphuong.milktea.bill.util.JsonUtils;
 import com.tanphuong.milktea.core.util.BitmapUtils;
 import com.tanphuong.milktea.databinding.ActivityShipmentMapsBinding;
 import com.tanphuong.milktea.shipment.data.DirectionsJSONParser;
+import com.tanphuong.milktea.shipment.data.MapConstants;
+import com.tanphuong.milktea.shipment.data.ShipperFetcher;
+import com.tanphuong.milktea.shipment.data.model.ShipStage;
+import com.tanphuong.milktea.shipment.data.model.Shipper;
 
 import org.json.JSONObject;
 
@@ -39,14 +49,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ShipmentMapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap map;
     private ActivityShipmentMapsBinding binding;
     private Marker userMarker;
     private Marker storeMarker;
     private Marker shipperMarker;
     private Polyline routePolyline;
-    private boolean isPickedProduct = false;
+    private ShipStage shipStage = ShipStage.FINDING;
+    private Handler animationHandler;
+    private Runnable animationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +66,25 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
         binding = ActivityShipmentMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (animationHandler != null && animationCallback != null) {
+            animationHandler.removeCallbacks(animationCallback);
+        }
     }
 
     /**
@@ -75,10 +101,8 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
         map = googleMap;
 
         LatLng user = new LatLng(20.97928734467758, 105.7568586083332);
-        LatLng shipper = new LatLng(20.971683812044024, 105.77646170549578);
         LatLng store = new LatLng(20.959854779788706, 105.7673035665212);
 
-        // Add a marker in Sydney and move the camera
         userMarker = map.addMarker(new MarkerOptions().position(user).title("An Vượng Villa")
                 .icon(BitmapDescriptorFactory.fromBitmap(
                         BitmapUtils.createMaker(this,
@@ -90,31 +114,95 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                                 R.drawable.img_default_store_cover,
                                 "CS 1"))));
 
-        // Focus to the store first
+        // Hướng màn hình về vị trí cửa hàng
         animateMap(storeMarker);
+        updateUIStage(ShipStage.FINDING);
+        binding.llFindingShipper.setVisibility(View.VISIBLE);
+        binding.llShipperInfo.setVisibility(View.GONE);
 
-        final Handler h = new Handler();
-        h.postDelayed(new Runnable() {
-
+        // Lấy dữ liệu Shipper
+        ShipperFetcher.fetchShipper(new ShipperFetcher.Callback() {
             @Override
-            public void run() {
-                shipperMarker = map.addMarker(new MarkerOptions().position(shipper).title("Ga Hà Đông")
+            public void onLoaded(Shipper shipper) {
+                shipperMarker = map.addMarker(new MarkerOptions()
+                        .position(new LatLng(shipper.getLatitude(), shipper.getLongitude()))
+                        .title("Ga Hà Đông")
                         .icon(BitmapDescriptorFactory.fromBitmap(
                                 BitmapUtils.createMaker(ShipmentMapsActivity.this,
                                         R.drawable.ic_shipper,
                                         "Shipper"))));
-                Toast.makeText(ShipmentMapsActivity.this, "A shipper has accepted your order!", Toast.LENGTH_SHORT).show();
-                // Focus to the accepted shipper
+                updateUIStage(ShipStage.ACCEPTED);
                 animateMap(shipperMarker);
                 moveOnMap(shipperMarker.getPosition(), storeMarker.getPosition());
+
+                // Cập nhật giao diện
+                binding.llFindingShipper.setVisibility(View.GONE);
+                binding.llShipperInfo.setVisibility(View.VISIBLE);
+                binding.tvShipperName.setText(shipper.getName());
+                binding.tvShipperSignal.setText(shipper.getSignal());
+                binding.tvShipperPhone.setText(shipper.getPhoneNumber());
+                Glide.with(ShipmentMapsActivity.this)
+                        .load(shipper.getAvatar())
+                        .centerCrop()
+                        .into(binding.imgShipperAvatar);
+                binding.llShipperPhone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", shipper.getPhoneNumber(), null));
+                        startActivity(intent);
+                    }
+                });
             }
-        }, 5000);
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(ShipmentMapsActivity.this, "Lấy dữ liệu shipper thất bại!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     private void moveOnMap(LatLng start, LatLng end) {
         String url = getDirectionsUrl(start, end);
         DownloadTask downloadTask = new DownloadTask();
         downloadTask.execute(url);
+    }
+
+    private void updateUIStage(ShipStage stage) {
+        Drawable inactiveBg = AppCompatResources.getDrawable(this, R.drawable.bg_corner_stroke);
+        int inactiveColor = getColor(R.color.DarkSlateGray);
+        Drawable activeBg = AppCompatResources.getDrawable(this, R.drawable.bg_corner_fill);
+        int activeColor = getColor(R.color.white);
+        shipStage = stage;
+        binding.rlAccept.setBackground(inactiveBg);
+        binding.tvAccept.setTextColor(inactiveColor);
+        binding.rlPicked.setBackground(inactiveBg);
+        binding.tvPicked.setTextColor(inactiveColor);
+        binding.rlShipped.setBackground(inactiveBg);
+        binding.tvShipped.setTextColor(inactiveColor);
+        switch (shipStage) {
+            case ACCEPTED:
+                binding.rlAccept.setBackground(activeBg);
+                binding.tvAccept.setTextColor(activeColor);
+                Toast.makeText(ShipmentMapsActivity.this, "Có shipper đã nhận đơn hàng của bạn!", Toast.LENGTH_SHORT).show();
+                break;
+            case PICKED:
+                binding.rlAccept.setBackground(activeBg);
+                binding.tvAccept.setTextColor(activeColor);
+                binding.rlPicked.setBackground(activeBg);
+                binding.tvPicked.setTextColor(activeColor);
+                Toast.makeText(ShipmentMapsActivity.this, "Shipper đã lấy đơn hàng từ cửa hàng!", Toast.LENGTH_SHORT).show();
+                break;
+            case SHIPPED:
+                binding.rlAccept.setBackground(activeBg);
+                binding.tvAccept.setTextColor(activeColor);
+                binding.rlPicked.setBackground(activeBg);
+                binding.tvPicked.setTextColor(activeColor);
+                binding.rlShipped.setBackground(activeBg);
+                binding.tvShipped.setTextColor(activeColor);
+                Toast.makeText(ShipmentMapsActivity.this, "Shipper đã giao hàng thành công!", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void animateMap(Marker focusMarker) {
@@ -160,6 +248,17 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
                 routes = parser.parse(jObject);
+                if (!routes.isEmpty()) {
+                    return routes;
+                }
+
+                // Trường hợp không lấy được dữ liệu từ Google Dỉrection API, lấy từ file json
+                int fileSource = R.raw.shipper_to_store;
+                if (shipStage == ShipStage.PICKED) {
+                    fileSource = R.raw.store_to_user;
+                }
+                jObject = JsonUtils.readFromResources(ShipmentMapsActivity.this, fileSource);
+                routes = parser.parse(jObject);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -185,6 +284,11 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 allPoints.addAll(points);
             }
 
+            if (allPoints.isEmpty()) {
+                Toast.makeText(ShipmentMapsActivity.this, "Không thể lấy dữ liệu chỉ đường!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             PolylineOptions lineOptions = new PolylineOptions();
             lineOptions.addAll(allPoints);
             lineOptions.width(14);
@@ -193,54 +297,47 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
             routePolyline = map.addPolyline(lineOptions);
 
             // Update shipper marker by time interval
-            final Handler h = new Handler();
-            h.postDelayed(new Runnable() {
+            animationHandler = new Handler();
+            animationCallback = new Runnable() {
                 private int index = 0;
 
                 @Override
                 public void run() {
-                    // Update shipper marker
                     shipperMarker.setPosition(allPoints.get(index));
+                    routePolyline.setPoints(allPoints.subList(index, allPoints.size() - 1));
+                    animateMap(shipperMarker);
                     if (index == allPoints.size() - 1) {
-                        if (!isPickedProduct) {
-                            isPickedProduct = true;
-                            // Then get to user
+                        if (shipStage == ShipStage.ACCEPTED) {
                             moveOnMap(shipperMarker.getPosition(), userMarker.getPosition());
+                            updateUIStage(ShipStage.PICKED);
                         } else {
-                            Toast.makeText(ShipmentMapsActivity.this, "Shipment done!", Toast.LENGTH_SHORT).show();
+                            updateUIStage(ShipStage.SHIPPED);
                         }
                         return;
                     }
-                    // Redraw route
-                    routePolyline.setPoints(allPoints.subList(index, allPoints.size() - 1));
-                    animateMap(shipperMarker);
                     index++;
-                    h.postDelayed(this, 500);
+                    animationHandler.postDelayed(this, 500);
                 }
-            }, 5000);
+            };
+            animationHandler.postDelayed(animationCallback, 3000);
         }
     }
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
         // Destination of route
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
         // Sensor enabled
         String sensor = "sensor=false";
         String mode = "mode=driving";
-        String apiKey = "key=AIzaSyCaTHXaVs22_Qh406E9SyYvmUUW_NcCjoU";
+        String apiKey = "key=" + MapConstants.MAP_API_KEY;
         // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode + "&" + apiKey;
-
         // Output format
         String output = "json";
-
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-        return url;
+        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
     }
 
     /**

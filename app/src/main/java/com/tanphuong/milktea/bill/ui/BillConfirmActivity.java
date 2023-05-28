@@ -1,15 +1,19 @@
 package com.tanphuong.milktea.bill.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
@@ -17,96 +21,198 @@ import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.PaymentData;
 import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.tanphuong.milktea.R;
-import com.tanphuong.milktea.bill.util.JsonUtils;
+import com.tanphuong.milktea.authorization.data.UserFactory;
+import com.tanphuong.milktea.bill.data.BillUploader;
+import com.tanphuong.milktea.bill.data.CardFactory;
+import com.tanphuong.milktea.bill.data.MilkTeaOrderFactory;
+import com.tanphuong.milktea.bill.data.model.Bill;
+import com.tanphuong.milktea.bill.data.model.BillStatus;
+import com.tanphuong.milktea.bill.data.model.PaymentMethod;
+import com.tanphuong.milktea.bill.ui.adapter.OrderSummaryAdapter;
 import com.tanphuong.milktea.bill.util.PaymentUtils;
 import com.tanphuong.milktea.databinding.ActivityBillConfirmBinding;
+import com.tanphuong.milktea.drink.data.model.MilkTeaOrder;
 import com.tanphuong.milktea.shipment.ui.ShipmentMapsActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BillConfirmActivity extends AppCompatActivity {
     private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 991;
-
-    private static final long SHIPPING_COST_CENTS = 90 * PaymentUtils.CENTS_IN_A_UNIT.longValue();
+    private static final int EDIT_CARD_REQUEST_CODE = 137;
 
     private ActivityBillConfirmBinding binding;
-    // A client for interacting with the Google Pay API.
+    private BottomSheetBehavior sheetBehavior;
+    private OrderSummaryAdapter adapter;
     private PaymentsClient paymentsClient;
-
-    private View googlePayButton;
-    private JSONArray garmentList;
-    private JSONObject selectedGarment;
+    private PaymentMethod paymentMethod = PaymentMethod.CASH;
+    private int totalPrice = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityBillConfirmBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        getSupportActionBar().hide();
         initializeUi();
 
-        // Set up the mock information for our item in the UI.
-        try {
-            selectedGarment = fetchRandomGarment();
-            displayGarment(selectedGarment);
-        } catch (JSONException e) {
-            throw new RuntimeException("The list of garments cannot be loaded");
-        }
-
-        // Initialize a Google Pay API client for an environment suitable for testing.
-        // It's recommended to create the PaymentsClient object inside of the onCreate method.
+        // Thanh toán với GPay
         paymentsClient = PaymentUtils.createPaymentsClient(this);
         possiblyShowGooglePayButton();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            // value passed in AutoResolveHelper
+            case LOAD_PAYMENT_DATA_REQUEST_CODE:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        PaymentData paymentData = PaymentData.getFromIntent(data);
+                        handlePaymentSuccess(paymentData);
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        // The user cancelled the payment attempt
+                        break;
+
+                    case AutoResolveHelper.RESULT_ERROR:
+                        Status status = AutoResolveHelper.getStatusFromIntent(data);
+                        handleError(status.getStatusCode());
+                        break;
+                }
+
+                // Re-enables the Google Pay payment button.
+                binding.btnPay.setClickable(true);
+                break;
+            case EDIT_CARD_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    binding.tvInfoCard.setText(CardFactory.getCardSummaryInfo());
+                }
+                break;
+        }
+    }
+
     private void initializeUi() {
-        googlePayButton = binding.btnPay;
-        binding.btnChoosePaymentCard.setOnClickListener(new View.OnClickListener() {
+        sheetBehavior = BottomSheetBehavior.from(binding.bsPaymentMethod.bottomSheet);
+        hideBottomSheet();
+        binding.llPaymentMethod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BillConfirmActivity.this, EditCardActivity.class);
-                startActivity(intent);
+                showBottomSheet();
             }
         });
         binding.btnPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BillConfirmActivity.this, ShipmentMapsActivity.class);
-                startActivity(intent);
+                pay();
             }
         });
-        binding.btnGpay.setOnClickListener(new View.OnClickListener() {
+        binding.bsPaymentMethod.paymentMethodOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                hideBottomSheet();
+                RadioButton checkedRadioButton = group.findViewById(checkedId);
+                boolean isChecked = checkedRadioButton.isChecked();
+                if (isChecked) {
+                    binding.tvInfoCard.setVisibility(View.GONE);
+                    binding.btnPay.setEnabled(true);
+                    String presentMethod = "";
+                    switch (checkedId) {
+                        case R.id.option_cash:
+                            paymentMethod = PaymentMethod.CASH;
+                            presentMethod = "Tiền mặt";
+                            break;
+                        case R.id.option_atm:
+                            paymentMethod = PaymentMethod.ATM;
+                            binding.tvInfoCard.setVisibility(View.VISIBLE);
+                            binding.tvInfoCard.setText(CardFactory.getCardSummaryInfo());
+                            binding.btnPay.setEnabled(CardFactory.getCardInfo() != null);
+                            presentMethod = "Thẻ ATM";
+                            break;
+                        case R.id.option_gpay:
+                            paymentMethod = PaymentMethod.G_PAY;
+                            presentMethod = "Google Pay";
+                            break;
+                    }
+                    binding.tvPaymentMethodValue.setText(presentMethod);
+                }
+            }
+        });
+        binding.tvInfoCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestPayment(v);
+                Intent intent = new Intent(BillConfirmActivity.this, EditCardActivity.class);
+                startActivityForResult(intent, EDIT_CARD_REQUEST_CODE);
             }
         });
+
+        // Tổng quan đơn hàng
+        List<MilkTeaOrder> orders = MilkTeaOrderFactory.showCart();
+        adapter = new OrderSummaryAdapter(orders);
+        binding.rlOrderSummary.setLayoutManager(new LinearLayoutManager(this));
+        binding.rlOrderSummary.setAdapter(adapter);
+        int orderPrice = MilkTeaOrderFactory.estimatePrice();
+        totalPrice = orderPrice + Bill.SHIP_COST;
+        binding.tvPriceTotalSelectProduct.setText(orderPrice + "đ");
+        binding.tvBillTotalPayment.setText(totalPrice + "đ");
     }
 
-    private void displayGarment(JSONObject garment) throws JSONException {
-        binding.tvSelectedQuantity.setText(Html.fromHtml(
-                garment.toString(), Html.FROM_HTML_MODE_COMPACT));
+    private void pay() {
+        // Tạo bill
+        Bill bill = new Bill();
+        bill.setOrders(MilkTeaOrderFactory.showCart());
+        bill.setUser(UserFactory.getCurrentUser());
+        bill.setShipper(null);
+        bill.setPaymentMethod(paymentMethod);
+        bill.setStatus(BillStatus.SHIPPER_FINDING);
+
+        // Xoá cart
+        MilkTeaOrderFactory.clearCart();
+
+        // Upload Bill
+        BillUploader.upload(bill, new BillUploader.Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure() {
+
+            }
+        });
+
+        binding.btnPay.setClickable(false);
+        switch (paymentMethod) {
+            case CASH:
+            case ATM:
+                goToShipmentTracking();
+                break;
+            case G_PAY:
+                requestGooglePayment();
+                break;
+        }
     }
 
-    /**
-     * Determine the viewer's ability to pay with a payment method supported by your app and display a
-     * Google Pay payment button.
-     *
-     * @see <a href="https://developers.google.com/android/reference/com/google/android/gms/wallet/
-     * PaymentsClient.html#isReadyToPay(com.google.android.gms.wallet.
-     * IsReadyToPayRequest)">PaymentsClient#IsReadyToPay</a>
-     */
+    private void goToShipmentTracking() {
+        binding.btnPay.setClickable(true);
+        Intent intent = new Intent(BillConfirmActivity.this, ShipmentMapsActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void possiblyShowGooglePayButton() {
-
         final Optional<JSONObject> isReadyToPayJson = PaymentUtils.getIsReadyToPayRequest();
         if (!isReadyToPayJson.isPresent()) {
             return;
         }
-
         // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
         // OnCompleteListener to be triggered when the result of the call is known.
         IsReadyToPayRequest request = IsReadyToPayRequest.fromJson(isReadyToPayJson.get().toString());
@@ -124,30 +230,14 @@ public class BillConfirmActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * If isReadyToPay returned {@code true}, show the button and hide the "checking" text. Otherwise,
-     * notify the user that Google Pay is not available. Please adjust to fit in with your current
-     * user flow. You are not required to explicitly let the user know if isReadyToPay returns {@code
-     * false}.
-     *
-     * @param available isReadyToPay API response.
-     */
     private void setGooglePayAvailable(boolean available) {
         if (available) {
-            googlePayButton.setVisibility(View.VISIBLE);
+            binding.btnPay.setVisibility(View.VISIBLE);
         } else {
             Toast.makeText(this, R.string.googlepay_status_unavailable, Toast.LENGTH_LONG).show();
         }
     }
 
-    /**
-     * PaymentData response object contains the payment information, as well as any additional
-     * requested information, such as billing and shipping address.
-     *
-     * @param paymentData A response object returned by Google after a payer approves payment.
-     * @see <a href="https://developers.google.com/pay/api/android/reference/
-     * object#PaymentData">PaymentData</a>
-     */
     private void handlePaymentSuccess(PaymentData paymentData) {
 
         // Token will be null if PaymentDataRequest was not constructed using fromJson(String).
@@ -169,6 +259,8 @@ public class BillConfirmActivity extends AppCompatActivity {
                     this, getString(R.string.payments_show_name, billingName),
                     Toast.LENGTH_LONG).show();
 
+            goToShipmentTracking();
+
             // Logging token string.
             Log.d("Google Pay token: ", token);
 
@@ -177,66 +269,35 @@ public class BillConfirmActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * At this stage, the user has already seen a popup informing them an error occurred. Normally,
-     * only logging is required.
-     *
-     * @param statusCode will hold the value of any constant from CommonStatusCode or one of the
-     *                   WalletConstants.ERROR_CODE_* constants.
-     * @see <a href="https://developers.google.com/android/reference/com/google/android/gms/wallet/
-     * WalletConstants#constant-summary">Wallet Constants Library</a>
-     */
     private void handleError(int statusCode) {
         Log.e("loadPaymentData failed", String.format("Error code: %d", statusCode));
     }
 
-    public void requestPayment(View view) {
+    public void requestGooglePayment() {
+        Optional<JSONObject> paymentDataRequestJson = PaymentUtils.getPaymentDataRequest(totalPrice);
+        if (!paymentDataRequestJson.isPresent()) {
+            return;
+        }
 
-        // Disables the button to prevent multiple clicks.
-        googlePayButton.setClickable(false);
+        PaymentDataRequest request =
+                PaymentDataRequest.fromJson(paymentDataRequestJson.get().toString());
 
-        // The price provided to the API should include taxes and shipping.
-        // This price is not displayed to the user.
-        try {
-            double garmentPrice = selectedGarment.getDouble("price");
-            long garmentPriceCents = Math.round(garmentPrice * PaymentUtils.CENTS_IN_A_UNIT.longValue());
-            long priceCents = garmentPriceCents + SHIPPING_COST_CENTS;
-
-            Optional<JSONObject> paymentDataRequestJson = PaymentUtils.getPaymentDataRequest(priceCents);
-            if (!paymentDataRequestJson.isPresent()) {
-                return;
-            }
-
-            PaymentDataRequest request =
-                    PaymentDataRequest.fromJson(paymentDataRequestJson.get().toString());
-
-            // Since loadPaymentData may show the UI asking the user to select a payment method, we use
-            // AutoResolveHelper to wait for the user interacting with it. Once completed,
-            // onActivityResult will be called with the result.
-            if (request != null) {
-                AutoResolveHelper.resolveTask(
-                        paymentsClient.loadPaymentData(request),
-                        this, LOAD_PAYMENT_DATA_REQUEST_CODE);
-            }
-
-        } catch (JSONException e) {
-            throw new RuntimeException("The price cannot be deserialized from the JSON object.");
+        if (request != null) {
+            AutoResolveHelper.resolveTask(
+                    paymentsClient.loadPaymentData(request),
+                    this, LOAD_PAYMENT_DATA_REQUEST_CODE);
         }
     }
 
-    private JSONObject fetchRandomGarment() {
-
-        // Only load the list of items if it has not been loaded before
-        if (garmentList == null) {
-            garmentList = JsonUtils.readFromResources(this, R.raw.tshirts);
+    private void showBottomSheet() {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
+    }
 
-        // Take a random element from the list
-        int randomIndex = Math.toIntExact(Math.round(Math.random() * (garmentList.length() - 1)));
-        try {
-            return garmentList.getJSONObject(randomIndex);
-        } catch (JSONException e) {
-            throw new RuntimeException("The index specified is out of bounds.");
+    private void hideBottomSheet() {
+        if (sheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+            sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
 }

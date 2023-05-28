@@ -2,15 +2,17 @@ package com.tanphuong.milktea.authorization.data.model;
 
 import com.tanphuong.milktea.core.data.model.Person;
 
-public class User extends Person {
+import java.io.Serializable;
+
+public class User extends Person implements Serializable {
     private String userName;
     private String address;
 
     public User() {
     }
 
-    public User(String id, String phoneNumber, String email, String avatar, String userName, String address) {
-        super(id, phoneNumber, email, avatar);
+    public User(String id, String name, String phoneNumber, String email, String avatar, String userName, String address) {
+        super(id, name, phoneNumber, email, avatar);
         this.userName = userName;
         this.address = address;
     }

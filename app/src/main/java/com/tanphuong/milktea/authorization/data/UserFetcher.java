@@ -31,6 +31,7 @@ public final class UserFetcher {
                                 Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                                 User user = new User();
                                 user.setId(currentUser.getUid());
+                                user.setName(document.getString("userName"));
                                 user.setUserName(document.getString("userName"));
                                 user.setPhoneNumber(document.getString("phoneNumber"));
                                 user.setEmail(document.getString("email"));

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,9 +21,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tanphuong.milktea.R;
+import com.tanphuong.milktea.bill.data.BillFetcher;
+import com.tanphuong.milktea.bill.data.BillUploader;
+import com.tanphuong.milktea.bill.data.model.Bill;
+import com.tanphuong.milktea.bill.data.model.BillStatus;
 import com.tanphuong.milktea.core.ui.map.adapter.StoreInfoWindowAdapter;
 import com.tanphuong.milktea.core.util.BitmapUtils;
 import com.tanphuong.milktea.databinding.FragmentStoreBinding;
+import com.tanphuong.milktea.shipment.ui.ShipmentMapsActivity;
 import com.tanphuong.milktea.store.data.StoreFetcher;
 import com.tanphuong.milktea.store.data.model.Store;
 import com.tanphuong.milktea.store.ui.StoreDetailActivity;
@@ -88,6 +94,37 @@ public class StoreListFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onFailed() {
                 binding.pbLoading.setVisibility(View.GONE);
+            }
+        });
+
+        BillFetcher.fetchBills(new BillFetcher.Callback() {
+            @Override
+            public void onLoaded(List<Bill> bills) {
+                for (Bill ongoingBill : bills) {
+                    if (ongoingBill.getStatus() == BillStatus.ON_GOING) {
+                        BillUploader.setOnGoingBill(ongoingBill);
+                        binding.llOnGoingBill.setVisibility(View.VISIBLE);
+                        Glide.with(getContext())
+                                .load(ongoingBill.getOrders().get(0).getMilkTea().getCoverImage())
+                                .centerCrop()
+                                .into(binding.imgMilkTeaCover);
+                        binding.tvMilkTeaName.setText(ongoingBill.getSummaryMilkTeas());
+                        binding.tvBillPrice.setText(ongoingBill.getTotalPrice() + "đ");
+                        binding.llOnGoingBill.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getActivity(), ShipmentMapsActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed() {
+
             }
         });
 

@@ -19,7 +19,7 @@
         android:id="@+id/tv_topping_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5000 VND"
+        android:text="5000đ"
         android:textColor="@color/LightSlateGray" />
 
     <CheckBox

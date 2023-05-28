@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MilkTeaShop</string>
+    <string name="app_name">Tân Phương MilkTea</string>
     <string name="title_activity_store_maps">StoreMapsActivity</string>
     <string name="title_activity_shipment_maps">ShipmentMapsActivity</string>
     <string name="title_activity_home">HomeActivity</string>

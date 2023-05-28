@@ -1,5 +1,7 @@
 package com.tanphuong.milktea.drink.data.model;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class RealIngredient extends Ingredient implements Serializable {
@@ -23,5 +25,11 @@ public class RealIngredient extends Ingredient implements Serializable {
 
     public int calculateCost() {
         return (int) (quantity * getPricePerUnit());
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getName();
     }
 }

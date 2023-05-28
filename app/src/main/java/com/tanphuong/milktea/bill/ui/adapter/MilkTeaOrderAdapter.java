@@ -39,11 +39,11 @@ public class MilkTeaOrderAdapter extends RecyclerView.Adapter<MilkTeaOrderAdapte
                 .into(holder.binding.imgMilkTeaCover);
         holder.binding.tvQuantity.setText(order.getQuantity() + "");
         holder.binding.tvMilkTeaName.setText(order.getMilkTea().getName());
-        holder.binding.tvMilkTeaPrice.setText(order.getMilkTea().getTotalCost() + " VND");
-        holder.binding.tvTotalPrice.setText(order.getTotalCost() + " VND");
+        holder.binding.tvMilkTeaPrice.setText(order.getMilkTea().getTotalCost() + "đ");
+        holder.binding.tvTotalPrice.setText(order.getTotalCost() + "đ");
         StringBuilder sb = new StringBuilder();
         for (RealIngredient topping : order.getToppings()) {
-            sb.append(topping.getName()).append(": ").append(topping.calculateCost()).append(" VND").append("\n");
+            sb.append(topping.getName()).append(": ").append(topping.calculateCost()).append("đ").append("\n");
         }
         holder.binding.tvTopping.setText(sb.toString());
         holder.binding.tvSize.setText(order.getSize().title());

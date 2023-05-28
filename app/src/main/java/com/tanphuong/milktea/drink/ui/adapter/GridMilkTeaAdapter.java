@@ -37,7 +37,7 @@ public class GridMilkTeaAdapter extends RecyclerView.Adapter<GridMilkTeaAdapter.
                 .centerCrop()
                 .into(holder.binding.imgMilkTeaCover);
         holder.binding.tvMilkTeaName.setText(milkTea.getName());
-        holder.binding.tvMilkTeaPrice.setText(milkTea.getTotalCost() + " VND");
+        holder.binding.tvMilkTeaPrice.setText(milkTea.getTotalCost() + "đ");
         holder.binding.cvMilkTea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

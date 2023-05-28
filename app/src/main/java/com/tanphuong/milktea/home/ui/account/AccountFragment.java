@@ -1,5 +1,6 @@
 package com.tanphuong.milktea.home.ui.account;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tanphuong.milktea.authorization.data.UserFetcher;
 import com.tanphuong.milktea.authorization.data.model.User;
+import com.tanphuong.milktea.authorization.ui.SignInActivity;
 import com.tanphuong.milktea.databinding.FragmentAccountBinding;
+import com.tanphuong.milktea.home.ui.HomeActivity;
 
 public class AccountFragment extends Fragment {
 
@@ -42,7 +45,9 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                getActivity().finish();
+                Intent intent = new Intent(getActivity(), SignInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 

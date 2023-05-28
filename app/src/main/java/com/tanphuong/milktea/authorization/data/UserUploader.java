@@ -13,7 +13,7 @@ import com.tanphuong.milktea.authorization.data.model.User;
 public final class UserUploader {
     private static final String TAG = "UserUploader";
 
-    public static void upload(FirebaseUser userInfo, OnUploadUserCallback callback) {
+    public static void upload(FirebaseUser userInfo, Callback callback) {
         String userId = userInfo.getUid();
         if (userId.isEmpty()) {
             if (callback != null) {
@@ -30,11 +30,13 @@ public final class UserUploader {
             user.setEmail(userInfo.getEmail());
         }
         if (userInfo.getDisplayName() != null) {
+            user.setName(userInfo.getDisplayName());
             user.setUserName(userInfo.getDisplayName());
         }
         if (userInfo.getPhotoUrl() != null) {
             user.setAvatar(userInfo.getPhotoUrl().getPath());
         }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .document(userId)
@@ -45,6 +47,7 @@ public final class UserUploader {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
                         if (callback != null) {
                             callback.onSuccess();
+                            UserFactory.signIn(user);
                         }
                     }
                 })
@@ -59,7 +62,7 @@ public final class UserUploader {
                 });
     }
 
-    public interface OnUploadUserCallback {
+    public interface Callback {
         void onSuccess();
 
         void onFailure();

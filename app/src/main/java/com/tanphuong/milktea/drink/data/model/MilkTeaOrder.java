@@ -1,8 +1,9 @@
 package com.tanphuong.milktea.drink.data.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MilkTeaOrder {
+public class MilkTeaOrder implements Serializable {
     private String id;
     private MilkTea milkTea;
     private List<RealIngredient> toppings;
@@ -53,7 +54,7 @@ public class MilkTeaOrder {
     }
 
     public String getNote() {
-        return note;
+        return note != null ? note : "";
     }
 
     public void setNote(String note) {

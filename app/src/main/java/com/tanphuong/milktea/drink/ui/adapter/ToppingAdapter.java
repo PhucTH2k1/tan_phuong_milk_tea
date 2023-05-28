@@ -38,7 +38,7 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RealIngredient topping = toppings.get(position);
         holder.binding.tvToppingName.setText(topping.getName());
-        holder.binding.tvToppingPrice.setText(topping.calculateCost() + " VND");
+        holder.binding.tvToppingPrice.setText(topping.calculateCost() + "đ");
         holder.binding.cbTopping.setChecked(pickedToppings.get(position));
         holder.binding.cbTopping.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

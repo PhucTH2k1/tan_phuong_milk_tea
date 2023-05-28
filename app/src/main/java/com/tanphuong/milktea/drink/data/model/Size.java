@@ -13,4 +13,13 @@ public enum Size {
                 return "Lớn";
         }
     }
+
+    public static Size fromString(String text) {
+        for (Size size : Size.values()) {
+            if (size.name().equalsIgnoreCase(text)) {
+                return size;
+            }
+        }
+        return MEDIUM;
+    }
 }

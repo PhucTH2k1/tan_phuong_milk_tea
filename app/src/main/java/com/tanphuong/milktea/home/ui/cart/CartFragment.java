@@ -15,7 +15,6 @@ import com.tanphuong.milktea.bill.ui.BillConfirmActivity;
 import com.tanphuong.milktea.bill.ui.adapter.MilkTeaOrderAdapter;
 import com.tanphuong.milktea.databinding.FragmentCartBinding;
 import com.tanphuong.milktea.drink.data.model.MilkTeaOrder;
-import com.tanphuong.milktea.shipment.ui.ShipmentMapsActivity;
 
 import java.util.List;
 
@@ -81,11 +80,6 @@ public class CartFragment extends Fragment {
     }
 
     private void calculateTotalPrice() {
-        List<MilkTeaOrder> orders = MilkTeaOrderFactory.showCart();
-        int total = 0;
-        for (MilkTeaOrder order : orders) {
-            total += order.getTotalCost();
-        }
-        binding.btnPay.setText("Thanh toán " + total + " VND");
+        binding.btnPay.setText("Thanh toán " + MilkTeaOrderFactory.estimatePrice() + "đ");
     }
 }

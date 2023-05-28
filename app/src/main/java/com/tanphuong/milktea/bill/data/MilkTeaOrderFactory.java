@@ -27,7 +27,19 @@ public final class MilkTeaOrderFactory {
     }
 
     public static List<MilkTeaOrder> showCart() {
-        return orders;
+        return new ArrayList<>(orders);
+    }
+
+    public static void clearCart() {
+        orders.clear();
+    }
+
+    public static int estimatePrice() {
+        int total = 0;
+        for (MilkTeaOrder order : orders) {
+            total += order.getTotalCost();
+        }
+        return total;
     }
 
     private static boolean adjustQuantityToOrder(MilkTeaOrder order, int biasQuantity) {

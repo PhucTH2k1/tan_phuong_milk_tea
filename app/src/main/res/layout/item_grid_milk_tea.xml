@@ -47,7 +47,7 @@
             android:id="@+id/tv_milk_tea_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="20000 VND"
+            android:text="20000đ"
             android:textColor="@color/OrangeRed"
             android:textSize="18sp" />
     </LinearLayout>
