@@ -39,6 +39,7 @@ import com.tanphuong.milktea.shipment.ui.ShipmentMapsActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,7 +168,7 @@ public class BillConfirmActivity extends AppCompatActivity {
     private void pay() {
         // Tạo bill
         Bill bill = new Bill();
-        bill.setOrders(MilkTeaOrderFactory.showCart());
+        bill.setOrders(new ArrayList<>(MilkTeaOrderFactory.showCart()));
         bill.setUser(UserFactory.getCurrentUser());
         bill.setShipper(null);
         bill.setPaymentMethod(paymentMethod);
@@ -180,7 +181,16 @@ public class BillConfirmActivity extends AppCompatActivity {
         BillUploader.upload(bill, new BillUploader.Callback() {
             @Override
             public void onSuccess() {
-
+                binding.btnPay.setClickable(false);
+                switch (paymentMethod) {
+                    case CASH:
+                    case ATM:
+                        goToShipmentTracking();
+                        break;
+                    case G_PAY:
+                        requestGooglePayment();
+                        break;
+                }
             }
 
             @Override
@@ -188,17 +198,6 @@ public class BillConfirmActivity extends AppCompatActivity {
 
             }
         });
-
-        binding.btnPay.setClickable(false);
-        switch (paymentMethod) {
-            case CASH:
-            case ATM:
-                goToShipmentTracking();
-                break;
-            case G_PAY:
-                requestGooglePayment();
-                break;
-        }
     }
 
     private void goToShipmentTracking() {

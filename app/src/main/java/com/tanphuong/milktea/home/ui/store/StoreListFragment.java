@@ -102,7 +102,7 @@ public class StoreListFragment extends Fragment implements OnMapReadyCallback,
             public void onLoaded(List<Bill> bills) {
                 for (Bill ongoingBill : bills) {
                     if (ongoingBill.getStatus() == BillStatus.ON_GOING) {
-                        BillUploader.setOnGoingBill(ongoingBill);
+                        BillUploader.setCurrentBill(ongoingBill);
                         binding.llOnGoingBill.setVisibility(View.VISIBLE);
                         Glide.with(getContext())
                                 .load(ongoingBill.getOrders().get(0).getMilkTea().getCoverImage())

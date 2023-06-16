@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tanphuong.milktea.R;
+import com.tanphuong.milktea.bill.data.BillUploader;
+import com.tanphuong.milktea.bill.data.model.BillStatus;
 import com.tanphuong.milktea.bill.util.JsonUtils;
 import com.tanphuong.milktea.core.util.BitmapUtils;
 import com.tanphuong.milktea.databinding.ActivityShipmentMapsBinding;
@@ -49,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ShipmentMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+    private static final long SHIPPER_SPEED_IN_MILLIS = 300;
     private GoogleMap map;
     private ActivityShipmentMapsBinding binding;
     private Marker userMarker;
@@ -134,6 +137,7 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 updateUIStage(ShipStage.ACCEPTED);
                 animateMap(shipperMarker);
                 moveOnMap(shipperMarker.getPosition(), storeMarker.getPosition());
+                BillUploader.uploadShipper(shipper.getId());
 
                 // Cập nhật giao diện
                 binding.llFindingShipper.setVisibility(View.GONE);
@@ -185,6 +189,7 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 binding.rlAccept.setBackground(activeBg);
                 binding.tvAccept.setTextColor(activeColor);
                 Toast.makeText(ShipmentMapsActivity.this, "Có shipper đã nhận đơn hàng của bạn!", Toast.LENGTH_SHORT).show();
+                BillUploader.uploadBillStatus(BillStatus.SHIPPER_FINDING);
                 break;
             case PICKED:
                 binding.rlAccept.setBackground(activeBg);
@@ -192,6 +197,7 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 binding.rlPicked.setBackground(activeBg);
                 binding.tvPicked.setTextColor(activeColor);
                 Toast.makeText(ShipmentMapsActivity.this, "Shipper đã lấy đơn hàng từ cửa hàng!", Toast.LENGTH_SHORT).show();
+                BillUploader.uploadBillStatus(BillStatus.ON_GOING);
                 break;
             case SHIPPED:
                 binding.rlAccept.setBackground(activeBg);
@@ -201,6 +207,7 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                 binding.rlShipped.setBackground(activeBg);
                 binding.tvShipped.setTextColor(activeColor);
                 Toast.makeText(ShipmentMapsActivity.this, "Shipper đã giao hàng thành công!", Toast.LENGTH_SHORT).show();
+                BillUploader.uploadBillStatus(BillStatus.COMPLETED);
                 break;
         }
     }
@@ -316,7 +323,7 @@ public class ShipmentMapsActivity extends FragmentActivity implements OnMapReady
                         return;
                     }
                     index++;
-                    animationHandler.postDelayed(this, 500);
+                    animationHandler.postDelayed(this, SHIPPER_SPEED_IN_MILLIS);
                 }
             };
             animationHandler.postDelayed(animationCallback, 3000);

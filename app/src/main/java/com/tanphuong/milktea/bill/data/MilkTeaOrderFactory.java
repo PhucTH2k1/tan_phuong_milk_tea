@@ -27,7 +27,7 @@ public final class MilkTeaOrderFactory {
     }
 
     public static List<MilkTeaOrder> showCart() {
-        return new ArrayList<>(orders);
+        return orders;
     }
 
     public static void clearCart() {

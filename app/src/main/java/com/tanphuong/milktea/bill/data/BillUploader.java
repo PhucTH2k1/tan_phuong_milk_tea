@@ -13,6 +13,7 @@ import com.google.firebase.firestore.AggregateSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.tanphuong.milktea.bill.data.model.Bill;
+import com.tanphuong.milktea.bill.data.model.BillStatus;
 import com.tanphuong.milktea.drink.data.model.MilkTeaOrder;
 import com.tanphuong.milktea.drink.data.model.RealIngredient;
 
@@ -25,14 +26,29 @@ import java.util.Map;
 public class BillUploader {
     private static final String TAG = "BillUploader";
 
-    private static Bill onGoingBill;
+    private static Bill currentBill;
 
-    public static void setOnGoingBill(Bill onGoingBill) {
-        BillUploader.onGoingBill = onGoingBill;
+    public static void setCurrentBill(Bill currentBill) {
+        BillUploader.currentBill = currentBill;
     }
 
-    public static Bill getOnGoingBill() {
-        return onGoingBill;
+    public static void uploadBillStatus(BillStatus status) {
+        if (currentBill.getId() == null) {
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("bills")
+                .document(currentBill.getId()).update("status", status.name());
+    }
+
+    public static void uploadShipper(String shipperId) {
+        if (shipperId == null) {
+            return;
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("bills")
+                .document(currentBill.getId())
+                .update("shipper", db.document("shippers/" + shipperId));
     }
 
     public static void upload(Bill bill, Callback callback) {
@@ -57,7 +73,7 @@ public class BillUploader {
                     billId = String.valueOf(count + 1);
                     bill.setId(billId);
                 }
-                onGoingBill = bill;
+                currentBill = bill;
                 if (bill.getOrders() != null) {
                     List<Map<String, Object>> orders = new ArrayList<>();
                     for (MilkTeaOrder order : bill.getOrders()) {
