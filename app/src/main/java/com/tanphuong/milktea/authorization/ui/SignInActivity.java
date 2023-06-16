@@ -31,6 +31,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.tanphuong.milktea.authorization.data.AuthorizationValidator;
 import com.tanphuong.milktea.authorization.data.PhoneSignIn;
 import com.tanphuong.milktea.authorization.data.UserUploader;
+import com.tanphuong.milktea.core.ui.LoadingDialog;
 import com.tanphuong.milktea.databinding.ActivitySignInBinding;
 import com.tanphuong.milktea.home.ui.HomeActivity;
 
@@ -42,6 +43,7 @@ public class SignInActivity extends AppCompatActivity {
     private BottomSheetBehavior sheetBehavior;
     private PhoneSignIn phoneSignIn;
     private String currentVerificationId;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class SignInActivity extends AppCompatActivity {
                             FirebaseAuth.getInstance().signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+                                    hideLoading();
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "signInWithCredential:success");
@@ -133,12 +136,14 @@ public class SignInActivity extends AppCompatActivity {
         phoneSignIn = new PhoneSignIn(this, new PhoneSignIn.SignInCallback() {
             @Override
             public void onSuccess(FirebaseUser userInfo) {
+                hideLoading();
                 hideBottomSheetOtp();
                 signInSuccess(userInfo);
             }
 
             @Override
             public void onFailure(Exception error) {
+                hideLoading();
                 hideBottomSheetOtp();
                 if (error instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
@@ -152,6 +157,7 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void codeSent(String verificationId) {
+                hideLoading();
                 currentVerificationId = verificationId;
                 showBottomSheetOtp();
             }
@@ -188,6 +194,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Bắt đầu gửi OTP
+                showLoading();
                 phoneSignIn.startPhoneNumberVerification("+84" + binding.edtPhone.getText());
             }
         });
@@ -215,12 +222,14 @@ public class SignInActivity extends AppCompatActivity {
         binding.layoutBottomSheet.btnCheckOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoading();
                 phoneSignIn.verifyPhoneNumberWithCode(currentVerificationId, binding.layoutBottomSheet.otpView.getText().toString());
             }
         });
         binding.llSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoading();
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken("672860158503-798kkjcheu79n60ibpgkv5u03voafiji.apps.googleusercontent.com")
                         .requestEmail()
@@ -242,5 +251,24 @@ public class SignInActivity extends AppCompatActivity {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             sheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
+    }
+
+    private void showLoading() {
+        if (loadingDialog == null) {
+            loadingDialog = new LoadingDialog(this);
+        }
+        loadingDialog.show();
+        binding.llSignInGoogle.setEnabled(false);
+        binding.tvSendPhone.setEnabled(false);
+        binding.edtPhone.setEnabled(false);
+    }
+
+    private void hideLoading() {
+        if (loadingDialog != null) {
+            loadingDialog.dismiss();
+        }
+        binding.llSignInGoogle.setEnabled(true);
+        binding.tvSendPhone.setEnabled(true);
+        binding.edtPhone.setEnabled(true);
     }
 }
